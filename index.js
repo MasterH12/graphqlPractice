@@ -1,6 +1,7 @@
 'use strict'
 require('dotenv').config()
 const http = require('http')
+const cors = require('cors');
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { graphqlHTTP } = require ('express-graphql')
 const express = require('express')
@@ -10,6 +11,8 @@ const { join } = require('path')
 const resolvers = require('./lib/resolvers')
 const app = express()
 const PORT = process.env.PORT || 3000
+
+const isDev = process.env.NODE_ENV !== "production"
 
 // define initial schema
 const typeDefs = readFileSync(
@@ -32,10 +35,11 @@ graphql({
 // server graphqlObject
 const handlerObject = graphqlHTTP({
     schema: schema,
-    graphiql: true
+    graphiql: isDev
 })
 
 // Express server
+app.use(cors());
 app.use('/api', handlerObject)
 
 app.listen({ port: PORT })

@@ -1,0 +1,34 @@
+mutation{
+	createCourse: createCourse(input:{
+    title:"titulo 2",
+    description: "description 2",
+  }){
+    _id
+    title
+  }
+  deleteCourse:deleteCourse(id:"638a80f32ba996471aabe175")
+	
+  addStudent: addStudent(
+    studentId: "63895d85ddf5f870c01c47e2",
+    courseId: "638a80ed2ba996471aabe174"
+  ){
+    _id
+  }
+}
+
+query{
+	allCourses: getCourses{
+    _id
+    title
+    description
+    students{
+    	_id
+      name
+  	}
+  }
+  
+  allStudents: getStudents{
+    _id
+    name
+  }
+}

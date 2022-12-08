@@ -1,3 +1,11 @@
+"valida los tipos de nivel"
+enum Level {
+    principiante
+    intermedio
+    avanzado
+}
+
+union GlobalSearch = Course | Student | Monitor
 "Querys"
 type Course{
     _id: ID!
@@ -6,12 +14,27 @@ type Course{
     description: String
     topic: String
     students: [Student]
+    level: Level
 }
 
-type Student{
+interface Person {
     _id: ID!
     name: String!
     email: String!
+}
+
+type Student implements Person{
+    _id: ID!
+    name: String!
+    email: String!
+    avatar: String
+}
+
+type Monitor implements Person{
+    _id: ID!
+    name: String!
+    email: String!
+    phone: String
 }
 
 type Query{
@@ -20,10 +43,13 @@ type Query{
     "Devuelve un curso"
     getCourse(id: ID!): Course
 
-    "Devuelve todos los cursos"
-    getStudents: [Student]
+    "Devuelve todas las Personas"
+    getPeople: [Person]
     "Devuelve un curso"
-    getStudent(id: ID!): Student
+    getPerson(id: ID!): Person
+
+    "Ejecuta una búsqueda global"
+    searchItems(keyword: String!): [GlobalSearch]
 }
 
 
@@ -34,6 +60,7 @@ input CourseInput{
     teacher: String
     description: String!
     topic: String
+    level: Level
 }
 input CourseEditInput{
     title: String
@@ -42,14 +69,18 @@ input CourseEditInput{
     topic: String
 }
 
-input StudentInput{
+input PersonInput{
     name: String!
     email: String!
+    phone: String
+    avatar: String
 }
 
-input StudentEditInput{
+input PersonEditInput{
     name: String
     email: String
+    phone: String
+    avatar: String
 }
 
 type Mutation{
@@ -62,10 +93,10 @@ type Mutation{
     "Agregar estudiante a curso"
     addStudent(studentId:ID!, courseId: ID!): Course
 
-    "Crea un estudiante"
-    createStudent(input: StudentInput!): Student
-    "Editar un estudiante"
-    editStudent(input: StudentEditInput!): Student
+    "Crea una persona"
+    createPerson(input: PersonInput!): Person
+    "Editar una persona"
+    editPerson(input: PersonEditInput!): Person
     "Eliminar un estudiante"
-    deleteStudent( _id:ID!): Boolean
+    deletePerson( _id:ID!): Boolean
 }
